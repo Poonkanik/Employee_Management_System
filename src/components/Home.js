@@ -7,20 +7,22 @@ function Home() {
   const [employees, setEmployees] = useState([]);
   const navigate = useNavigate();
 
-  const API_BASE = process.env.REACT_APP_API || "http://localhost:8080";
+  const API_BASE =
+    process.env.REACT_APP_API ||
+    "https://employee-management-sys-backend.onrender.com";
 
   const fetchEmployees = () => {
     axios
       .get(`${API_BASE}/api/employees`)
-      .then((res) => setEmployees(res.data || []))  // safe fallback
+      .then((res) => setEmployees(res.data || []))
       .catch((err) => {
         console.error("API Error:", err);
-        setEmployees([]); // prevent crash
+        setEmployees([]);
       });
   };
 
   useEffect(() => {
-    fetchEmployees();   // run once only
+    fetchEmployees();
   }, []);
 
   const deleteEmployee = async (id) => {
