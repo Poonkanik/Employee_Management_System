@@ -5,7 +5,10 @@ import axios from "axios";
 function EditEmployee() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const API_BASE = process.env.REACT_APP_API || "http://localhost:8080";
+
+  const API_BASE =
+    process.env.REACT_APP_API ||
+    "https://employee-management-sys-backend.onrender.com";
 
   const [emp, setEmp] = useState(null);
 
@@ -13,17 +16,20 @@ function EditEmployee() {
     axios
       .get(`${API_BASE}/api/employees/${id}`)
       .then((res) => setEmp(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("GET error:", err));
   }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await axios.put(`${API_BASE}/api/employees/${id}`, emp);
+      await axios.put(`${API_BASE}/api/employees/${id}`, emp, {
+        headers: { "Content-Type": "application/json" },
+      });
       alert("Employee Updated");
       navigate("/home");
     } catch (err) {
+      console.error("PUT error:", err);
       alert("Error updating employee");
     }
   };
@@ -57,14 +63,16 @@ function EditEmployee() {
         <input
           type="number"
           value={emp.experience}
-          onChange={(e) => setEmp({ ...emp, experience: e.target.value })}
+          onChange={(e) =>
+            setEmp({ ...emp, experience: Number(e.target.value) })
+          }
         />
 
         <label>Salary</label>
         <input
           type="number"
           value={emp.salary}
-          onChange={(e) => setEmp({ ...emp, salary: e.target.value })}
+          onChange={(e) => setEmp({ ...emp, salary: Number(e.target.value) })}
         />
 
         <button type="submit" className="btn">

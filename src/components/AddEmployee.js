@@ -16,33 +16,29 @@ function AddEmployee() {
 
   const navigate = useNavigate();
 
-  // Use .env if set, else fallback
-  const API_BASE = process.env.REACT_APP_API || "http://localhost:8080";
+  const API_BASE =
+    process.env.REACT_APP_API ||
+    "https://employee-management-sys-backend.onrender.com";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-
-    await axios.post(`${API_BASE}/api/employees`, emp, {
+      await axios.post(`${API_BASE}/api/employees`, emp, {
         headers: { "Content-Type": "application/json" },
       });
 
       alert("Employee added successfully");
-      navigate("/home"); // Go back to home
+      navigate("/home");
     } catch (err) {
       console.error("Add employee error:", err);
 
-      // Detailed error information
       if (err.response) {
-        console.error("Response data:", err.response.data);
-        console.error("Status:", err.response.status);
         alert(
-          `Error adding employee (status ${err.response.status}). Check console for details.`
+          `Backend error: ${err.response.status}. Check console for details.`
         );
       } else if (err.request) {
-        console.error("No response:", err.request);
-        alert("No response from backend. Is Spring Boot running?");
+        alert("No response from backend. Backend might be sleeping.");
       } else {
         alert("Error: " + err.message);
       }
@@ -52,6 +48,7 @@ function AddEmployee() {
   return (
     <div className="page-container">
       <h2 className="page-title">Add New Employee</h2>
+
       <form onSubmit={handleSubmit}>
         {["name", "role", "email", "experience", "salary"].map((field) => (
           <div className="form-group" key={field}>
@@ -90,10 +87,7 @@ function AddEmployee() {
               type="checkbox"
               checked={emp.degreeVerification}
               onChange={(e) =>
-                setEmp({
-                  ...emp,
-                  degreeVerification: e.target.checked,
-                })
+                setEmp({ ...emp, degreeVerification: e.target.checked })
               }
             />
             Degree Verification
