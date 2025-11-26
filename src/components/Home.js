@@ -7,9 +7,8 @@ function Home() {
   const [employees, setEmployees] = useState([]);
   const navigate = useNavigate();
 
-  const API_BASE =
-    process.env.REACT_APP_API ||
-    "https://employee-management-sys-backend.onrender.com";
+ const API_BASE = process.env.REACT_APP_API;
+
 
   const fetchEmployees = () => {
     axios
