@@ -7,7 +7,8 @@ function Home() {
   const [employees, setEmployees] = useState([]);
   const navigate = useNavigate();
 
- const API_BASE = process.env.REACT_APP_API;
+ const API_BASE = process.env.REACT_APP_API || "http://localhost:8080";
+
 
 
   const fetchEmployees = () => {

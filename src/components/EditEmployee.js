@@ -6,9 +6,8 @@ function EditEmployee() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const API_BASE =
-    process.env.REACT_APP_API ||
-    "https://employee-management-sys-backend.onrender.com";
+const API_BASE = process.env.REACT_APP_API || "http://localhost:8080";
+
 
   const [emp, setEmp] = useState(null);
 
