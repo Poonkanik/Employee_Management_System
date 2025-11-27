@@ -8,22 +8,32 @@ function AddEmployee() {
     name: "",
     role: "",
     email: "",
-    experience: 0,
-    salary: 0,
+    experience: "",
+    salary: "",
     backgroundCheck: false,
     degreeVerification: false,
   });
 
   const navigate = useNavigate();
 
-const API_BASE = process.env.REACT_APP_API || "http://localhost:8080";
-
+  const API_BASE =
+    process.env.REACT_APP_API ||
+    "https://employee-management-sys-backend-2.onrender.com";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // ❗ FIX: Remove fields that backend does not support
+    const payload = {
+      name: emp.name,
+      role: emp.role,
+      email: emp.email,
+      experience: Number(emp.experience) || 0,
+      salary: Number(emp.salary) || 0,
+    };
+
     try {
-      await axios.post(`${API_BASE}/api/employees`, emp, {
+      await axios.post(`${API_BASE}/api/employees`, payload, {
         headers: { "Content-Type": "application/json" },
       });
 
@@ -33,13 +43,9 @@ const API_BASE = process.env.REACT_APP_API || "http://localhost:8080";
       console.error("Add employee error:", err);
 
       if (err.response) {
-        alert(
-          `Backend error: ${err.response.status}. Check console for details.`
-        );
-      } else if (err.request) {
-        alert("No response from backend. Backend might be sleeping.");
+        alert(`Backend error: ${err.response.status}`);
       } else {
-        alert("Error: " + err.message);
+        alert("Network error. Backend may be sleeping.");
       }
     }
   };
@@ -58,10 +64,7 @@ const API_BASE = process.env.REACT_APP_API || "http://localhost:8080";
               onChange={(e) =>
                 setEmp({
                   ...emp,
-                  [field]:
-                    field === "experience" || field === "salary"
-                      ? Number(e.target.value)
-                      : e.target.value,
+                  [field]: e.target.value,
                 })
               }
               required
@@ -69,6 +72,7 @@ const API_BASE = process.env.REACT_APP_API || "http://localhost:8080";
           </div>
         ))}
 
+        {/* UI still keeps these checkboxes */}
         <div className="checkbox-group">
           <label>
             <input
